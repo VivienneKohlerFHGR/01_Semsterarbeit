@@ -1,24 +1,41 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cocktail API</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <title>Wo Parken?</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header>
-        <h1>Vorlage für interaktive Medien II</h1>
 
-    </header>
-    <main>
-        <h2>Main Content</h2>
-        <h3>hey aaron häts klappt?? Jo es het klappt! YEY!</h3>
-    </main>
-    <footer>
-        <p>This is the footer of the page.</p>
+<main class="home">
 
-    </footer>
-    <script src="js/script.js" type="module"></script>
+  <section class="info-box">
+    <h1><span>Wo</span> Parken?</h1>
+
+    <div class="district-card">
+      <ol class="district-list">
+        <li data-district="kreis1">Altstadt</li>
+        <li data-district="kreis2">Enge, Wollishofen & Leimbach</li>
+        <li data-district="kreis3">Wiedikon</li>
+        <li data-district="kreis4">Aussersihl</li>
+        <li data-district="kreis5">Industriequiatier</li>
+        <li data-district="kreis6">Ober- & Unterstrass</li>
+        <li data-district="kreis7">Fluntern, Hottingen,<br>Hirslanden & Witikon</li>
+        <li data-district="kreis8">Riesbach</li>
+        <li data-district="kreis9">Altstetten & Albisrieden</li>
+        <li data-district="kreis10">Höngg & Wipkingen</li>
+        <li data-district="kreis11">Seebach, Affoltern Oerlikon</li>
+        <li data-district="kreis12">Schwamendingen</li>
+      </ol>
+
+      <img class="parking-house" src="assets/parkhaus.png" alt="Parkhaus">
+    </div>
+  </section>
+
+    <section class="map-area" id="mapArea"></section>
+
+</main>
+
+<script src="js/script.js"></script>
 </body>
 </html>
