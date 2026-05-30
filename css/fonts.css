@@ -1,0 +1,65 @@
+/* -> import von dateien */
+/* weights
+300: thin
+400: regular
+500: medium
+600: semibold
+700: bold
+800: extrabold
+900: black
+*/
+
+@font-face {
+    font-family: 'inter';
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+    src: url('../fonts/inter_light.eot');
+    src: url('../fonts/inter_light.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/inter_light.woff2') format('woff2'),
+    url('../fonts/inter_light.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'inter';
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url('../fonts/inter_regular.eot');
+    src: url('../fonts/inter_regular.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/inter_regular.woff2') format('woff2'),
+    url('../fonts/inter_regular.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'inter';
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    src: url('../fonts/inter_medium.eot');
+    src: url('../fonts/inter_medium.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/inter_medium.woff2') format('woff2'),
+    url('../fonts/inter_medium.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'inter';
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url('../fonts/inter_bold.eot');
+    src: url('../fonts/inter_bold.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/inter_bold.woff2') format('woff2'),
+    url('../fonts/inter_bold.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'digitalnumbers';
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url('../fonts/digitalnumbers_regular.eot');
+    src: url('../fonts/digitalnumbers_regular.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/digitalnumbers_regular.woff2') format('woff2'),
+    url('../fonts/digitalnumbers_regular.woff') format('woff');
+}
