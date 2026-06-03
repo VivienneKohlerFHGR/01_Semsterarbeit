@@ -135,3 +135,222 @@ body {
   pointer-events: all;
   cursor: pointer;
 }
+
+/* ─────────────────────────────────────────────────
+   Parkhaus-Detailpanel (in info-box)
+   ───────────────────────────────────────────────── */
+
+#detail-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+.ph-back {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--turquoise);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: left;
+}
+
+/* ── Detail-Karte ── */
+.ph-card {
+  background: white;
+  border: 16px solid var(--turquoise);
+  border-radius: 28px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.ph-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ph-name {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.ph-address {
+  font-size: 14px;
+  color: #777;
+  margin: 6px 0 0;
+}
+
+/* ── Status-Badge ── */
+.card-status {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.card-status.open    { background: #d4f4ee; color: #06977e; }
+.card-status.closed  { background: #ffe0e0; color: var(--red); }
+.card-status.unknown { background: #eee;    color: #888; }
+
+/* ── Digitaler Zähler ── */
+.ph-counter {
+  text-align: center;
+  position: relative;
+  padding-bottom: 20px;
+}
+.ph-counter-label {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+.ph-counter-display {
+  background: #111;
+  border-radius: 14px;
+  padding: 18px 24px;
+  display: inline-block;
+}
+.digital-number {
+  font-family: 'digitalnumbers', monospace;
+  font-size: 54px;
+  color: var(--turquoise);
+  display: block;
+  min-width: 100px;
+  text-align: center;
+}
+.digital-number.flash-up   { animation: num-flash-up   0.5s ease; }
+.digital-number.flash-down { animation: num-flash-down 0.5s ease; }
+
+@keyframes num-flash-up {
+  0%   { color: #00ff99; }
+  100% { color: var(--turquoise); }
+}
+@keyframes num-flash-down {
+  0%   { color: var(--red); }
+  100% { color: var(--turquoise); }
+}
+
+/* ── Auto-Animation ── */
+.anim-car {
+  font-size: 28px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.anim-car.hidden   { display: none; }
+.anim-car.entering { animation: car-enter 0.7s ease-out forwards; }
+.anim-car.exiting  { animation: car-exit  0.7s ease-in  forwards; }
+
+@keyframes car-enter {
+  from { opacity: 0; transform: translateX(calc(-50% + 120px)); }
+  to   { opacity: 1; transform: translateX(-50%); }
+}
+@keyframes car-exit {
+  from { opacity: 1; transform: translateX(-50%); }
+  to   { opacity: 0; transform: translateX(calc(-50% - 120px)); }
+}
+
+/* ── Belegungsbalken ── */
+.ph-occ-label {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.occ-bar-track {
+  background: #eee;
+  border-radius: 8px;
+  height: 14px;
+  overflow: hidden;
+}
+.occ-bar-fill {
+  height: 100%;
+  border-radius: 8px;
+  background: var(--turquoise);
+  width: 0%;
+  transition: width 0.6s ease, background 0.4s ease;
+}
+.occ-bar-fill.busy { background: #f59e0b; }
+.occ-bar-fill.full { background: var(--red); }
+
+/* ── Mini-Karte ── */
+.ph-map-thumb svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+/* ── Sidebar: Parkhaus-Liste ── */
+.ph-sidebar-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 20px;
+}
+
+.lots-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.lots-list li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: white;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--black);
+  border: 2px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+}
+.lots-list li a:hover {
+  background: #f0fdf9;
+  border-color: var(--turquoise);
+}
+.lots-list li.active-lot a {
+  background: #e0faf5;
+  border-color: var(--turquoise);
+}
+
+.lot-name {
+  flex: 1;
+  font-weight: 500;
+  font-size: 15px;
+}
+.lot-avail {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+.lot-avail.green  { background: #d4f4ee; color: #06977e; }
+.lot-avail.orange { background: #fff3cd; color: #b45309; }
+.lot-avail.red    { background: #ffe0e0; color: var(--red); }
+.lot-avail.muted  { background: #eee;    color: #999; }
+.lot-arrow {
+  font-size: 18px;
+  color: #ccc;
+}
