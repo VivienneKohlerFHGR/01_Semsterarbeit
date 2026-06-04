@@ -126,6 +126,8 @@ let mapDistrictPaths = [];
 let mapDistrictItems = [];
 let clickablePins = [];
 let refreshTimer = null;
+let lastFreeLots  = null;
+let carAnimating  = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("mapArea")) initHomePage();
@@ -372,9 +374,32 @@ function getPinName(svgId) {
   return "Parkhaus";
 }
 
+/* Auto-Animation */
+
+function playCarAnimation(type) {
+  if (carAnimating) return;
+  const car = document.getElementById("animCar");
+  if (!car) return;
+
+  carAnimating = true;
+  car.src = type === "enter"
+    ? "assets/einfahrendes_auto.svg"
+    : "assets/ausfahrendes_auto.svg";
+
+  car.classList.remove("car-enter", "car-exit");
+  void car.offsetWidth; // reflow erzwingen
+  car.classList.add(type === "enter" ? "car-enter" : "car-exit");
+
+  car.addEventListener("animationend", () => {
+    car.classList.remove("car-enter", "car-exit");
+    carAnimating = false;
+  }, { once: true });
+}
+
 /* Detailseite */
 
 function initDetailPage() {
+  lastFreeLots = null;
   const params = new URLSearchParams(window.location.search);
   const lotId = params.get("id");
 
@@ -464,6 +489,12 @@ function renderDetail(lot) {
   document.getElementById("detailAddress").textContent = address;
   document.getElementById("detailFree").textContent = free !== null ? free : "–";
   document.getElementById("detailStatus").textContent = getStatusText(state);
+
+  if (lastFreeLots !== null && free !== null) {
+    if (free < lastFreeLots) playCarAnimation("exit");
+    else if (free > lastFreeLots) playCarAnimation("enter");
+  }
+  lastFreeLots = free;
 
   updateAvailabilityBar(free, total);
   updateMiniMap(API_TO_KREIS[lot.id]);

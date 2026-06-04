@@ -365,3 +365,38 @@ body {
   color: #ffffff;
   transform: translateX(-3px);
 }
+
+/* ── Auto-Animation (Detailseite) ── */
+
+.anim-car {
+  position: absolute;
+  bottom: -10px;
+  height: 120px;
+  width: auto;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.anim-car.car-enter {
+  animation: car-enter 1.5s ease-in-out forwards;
+}
+
+.anim-car.car-exit {
+  animation: car-exit 1.5s ease-in-out forwards;
+}
+
+/* Auto fährt von links in den Eingang (Mitte) und blendet aus */
+@keyframes car-enter {
+  0%   { left: -20%; opacity: 1; }
+  75%  { left: 35%;  opacity: 1; }
+  100% { left: 49%;  opacity: 0; }
+}
+
+/* Auto taucht am Ausgang (Mitte) auf und fährt nach links weg */
+@keyframes car-exit {
+  0%   { left: 40%;  opacity: 0; }
+  15%  { left: 40%;  opacity: 1; }
+  85%  { left: 5%;   opacity: 1; }
+  100% { left: -20%; opacity: 0; }
+}
