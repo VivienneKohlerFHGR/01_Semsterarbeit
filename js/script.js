@@ -1,331 +1,561 @@
-// ── Konstanten ────────────────────────────────────────────────
+const API = "https://api.parkendd.de/Zuerich";
+const REFRESH_MS = 5000;
+const CACHE_KEY = "zuerich_parking_cache";
+const CACHE_TIME = 15000;
 
-const API        = "https://api.parkendd.de/Zuerich";
-const REFRESH_MS = 30000;
-
-// SVG-Pin-ID → API-Lot-ID
 const PIN_TO_API = {
-  accu:             "zuerichparkhausaccu",
+  accu: "zuerichparkhausaccu",
   albisriederplatz: "zuerichparkhausalbisriederplatz",
-  bleicherweg:      "zuerichparkhausbleicherweg",
-  centereleven:     "zuerichparkhauscentereleven",
-  cityparking:      "zuerichparkhauscityparking",
-  cityport:         "zuerichparkhauscityport",
-  crowneplaza:      "zuerichparkhauscrowneplaza",
-  dorflinde:        "zuerichparkhausdorflinde",
-  feldegg:          "zuerichparkhausfeldegg",
-  globus:           "zuerichparkhausglobus",
-  hardau2:          "zuerichparkhaushardauii",
-  hauptbahnhof:     "zuerichparkhaushauptbahnhof",
-  helvetiaplatz:    "zuerichparkhaushelvetiaplatz",
-  hohepromenade:    "zuerichparkhaushohepromenade",
-  jelmoli:          "zuerichparkhausjelmoli",
-  jungholz:         "zuerichparkhausjungholz",
-  maxbillplatz:     "zuerichparkhausmaxbillplatz",
-  messezuerichag:   "zuerichparkhausmessezuerichag",
-  nordhaus:         "zuerichparkhausnordhaus",
-  octavo:           "zuerichparkhausoctavo",
-  opera:            "zuerichparkhausopéra",
-  parkside:         "zuerichparkhausparkside",
-  parkhyatt:        "zuerichparkhausparkhyatt",
-  puls5parkgarage:  "zuerichpuls5parkgarage",
-  pwest:            "zuerichparkhauspwest",
-  theater11:        "zuerichparkplatztheater11",
-  uniirchel:        "zuerichparkhausuniirchel",
-  urania:           "zuerichparkhausurania",
-  utoquai:          "zuerichparkhausutoquai",
-  zueri11shopping:  "zuerichparkhauszueri11shopping",
-  zuerichhorn:      "zuerichparkhauszuerichhorn",
+  bleicherweg: "zuerichparkhausbleicherweg",
+  centereleven: "zuerichparkhauscentereleven",
+  cityparking: "zuerichparkhauscityparking",
+  cityport: "zuerichparkhauscityport",
+  crowneplaza: "zuerichparkhauscrowneplaza",
+  dorflinde: "zuerichparkhausdorflinde",
+  feldegg: "zuerichparkhausfeldegg",
+  globus: "zuerichparkhausglobus",
+  hardau2: "zuerichparkhaushardauii",
+  hauptbahnhof: "zuerichparkhaushauptbahnhof",
+  helvetiaplatz: "zuerichparkhaushelvetiaplatz",
+  hohepromenade: "zuerichparkhaushohepromenade",
+  jelmoli: "zuerichparkhausjelmoli",
+  jungholz: "zuerichparkhausjungholz",
+  maxbillplatz: "zuerichparkhausmaxbillplatz",
+  messezuerichag: "zuerichparkhausmessezuerichag",
+  nordhaus: "zuerichparkhausnordhaus",
+  octavo: "zuerichparkhausoctavo",
+  opera: "zuerichparkhausopéra",
+  parkside: "zuerichparkhausparkside",
+  parkhyatt: "zuerichparkhausparkhyatt",
+  puls5parkgarage: "zuerichpuls5parkgarage",
+  pfingstweid: "zuerichparkhauspfingstweid",
+  pwest: "zuerichparkhauspwest",
+  uniirchel: "zuerichparkhausuniirchel",
+  usznord: "zuerichparkhaususznord",
+  uszsüd: "zuerichparkplatzuszsued",
+  uszsued: "zuerichparkplatzuszsued",
+  stampfenbach: "zuerichparkhausstampfenbach",
+  talgarten: "zuerichparkhaustalgarten",
+  theater11: "zuerichparkplatztheater11",
+  urania: "zuerichparkhausurania",
+  utoquai: "zuerichparkhausutoquai",
+  zueri11shopping: "zuerichparkhauszueri11shopping",
+  zuerichhorn: "zuerichparkhauszuerichhorn"
 };
 
-// API-Lot-ID → Kreis (für Mini-Karte)
+const PIN_NAMES = {
+  accu: "Accu",
+  albisriederplatz: "Albisriederplatz",
+  bleicherweg: "Bleicherweg",
+  centereleven: "Center Eleven",
+  cityparking: "City Parking",
+  cityport: "Cityport",
+  crowneplaza: "Crowne Plaza",
+  dorflinde: "Dorflinde",
+  feldegg: "Feldegg",
+  globus: "Globus",
+  hardau2: "Hardau II",
+  hauptbahnhof: "Hauptbahnhof",
+  helvetiaplatz: "Helvetiaplatz",
+  hohepromenade: "Hohe Promenade",
+  jelmoli: "Jelmoli",
+  jungholz: "Jungholz",
+  maxbillplatz: "Max-Bill-Platz",
+  messezuerichag: "Messe Zürich AG",
+  nordhaus: "Nordhaus",
+  octavo: "Octavo",
+  opera: "Opéra",
+  parkside: "Parkside",
+  parkhyatt: "Park Hyatt",
+  puls5parkgarage: "Puls 5 Parkgarage",
+  pfingstweid: "Pfingstweid",
+  pwest: "P West",
+  uniirchel: "Uni Irchel",
+  usznord: "USZ Nord",
+  uszsüd: "USZ Süd",
+  uszsued: "USZ Süd",
+  stampfenbach: "Stampfenbach",
+  talgarten: "Talgarten",
+  theater11: "Theater 11",
+  urania: "Urania",
+  utoquai: "Utoquai",
+  zueri11shopping: "Züri 11 Shopping",
+  zuerichhorn: "Zürichhorn"
+};
+
 const API_TO_KREIS = {
-  zuerichparkhausdorflinde:        "kreis12",
-  zuerichparkhausaccu:             "kreis11",
-  zuerichparkhauscentereleven:     "kreis11",
-  zuerichparkhauscityport:         "kreis11",
-  zuerichparkhausjungholz:         "kreis11",
-  zuerichparkhausmaxbillplatz:     "kreis11",
-  zuerichparkhausmessezuerichag:   "kreis11",
-  zuerichparkhausnordhaus:         "kreis11",
-  zuerichparkhausoctavo:           "kreis11",
-  zuerichparkhausparkside:         "kreis11",
-  zuerichparkhauszueri11shopping:  "kreis11",
-  zuerichparkplatztheater11:       "kreis11",
-  zuerichparkhausfeldegg:          "kreis7",
-  zuerichparkhausutoquai:          "kreis7",
-  zuerichparkhauszuerichhorn:      "kreis7",
-  zuerichparkhausuniirchel:        "kreis6",
-  zuerichparkhauspwest:            "kreis5",
-  zuerichpuls5parkgarage:          "kreis5",
-  zuerichparkhaushardauii:         "kreis4",
-  zuerichparkhaushelvetiaplatz:    "kreis4",
-  zuerichparkhauscrowneplaza:      "kreis4",
+  zuerichparkhausdorflinde: "kreis12",
+  zuerichparkhausaccu: "kreis11",
+  zuerichparkhauscentereleven: "kreis11",
+  zuerichparkhauscityport: "kreis11",
+  zuerichparkhausjungholz: "kreis11",
+  zuerichparkhausmaxbillplatz: "kreis11",
+  zuerichparkhausmessezuerichag: "kreis11",
+  zuerichparkhausnordhaus: "kreis11",
+  zuerichparkhausoctavo: "kreis11",
+  zuerichparkhausparkside: "kreis11",
+  zuerichparkhauszueri11shopping: "kreis11",
+  zuerichparkplatztheater11: "kreis11",
+  zuerichparkhausfeldegg: "kreis7",
+  zuerichparkhausutoquai: "kreis7",
+  zuerichparkhauszuerichhorn: "kreis7",
+  zuerichparkhaususznord: "kreis6",
+  zuerichparkplatzuszsued: "kreis6",
+  zuerichparkhausuniirchel: "kreis6",
+  zuerichparkhausstampfenbach: "kreis6",
+  zuerichparkhauspwest: "kreis5",
+  zuerichpuls5parkgarage: "kreis5",
+  zuerichparkhauspfingstweid: "kreis5",
+  zuerichparkhaushardauii: "kreis4",
+  zuerichparkhaushelvetiaplatz: "kreis4",
+  zuerichparkhauscrowneplaza: "kreis4",
   zuerichparkhausalbisriederplatz: "kreis3",
-  zuerichparkhausparkhyatt:        "kreis2",
-  zuerichparkhausbleicherweg:      "kreis1",
-  zuerichparkhauscityparking:      "kreis1",
-  zuerichparkhausglobus:           "kreis1",
-  zuerichparkhaushauptbahnhof:     "kreis1",
-  zuerichparkhaushohepromenade:    "kreis1",
-  zuerichparkhausjelmoli:          "kreis1",
-  "zuerichparkhausopéra":          "kreis1",
-  zuerichparkhausurania:           "kreis1",
+  zuerichparkhausparkhyatt: "kreis2",
+  zuerichparkhausbleicherweg: "kreis1",
+  zuerichparkhauscityparking: "kreis1",
+  zuerichparkhausglobus: "kreis1",
+  zuerichparkhaushauptbahnhof: "kreis1",
+  zuerichparkhaushohepromenade: "kreis1",
+  zuerichparkhausjelmoli: "kreis1",
+  zuerichparkhausopéra: "kreis1",
+  zuerichparkhausurania: "kreis1",
+  zuerichparkhaustalgarten: "kreis1"
 };
 
-// ── Zustand ───────────────────────────────────────────────────
-
-let currentLotId    = null;
-let lastFree        = null;
-let animating       = false;
-let refreshInterval = null;
-
-// Referenzen auf SVG-Elemente (werden in initMapHover gesetzt)
 let mapDistrictPaths = [];
-let mapPinGroups     = [];
 let mapDistrictItems = [];
+let clickablePins = [];
+let refreshTimer = null;
 
-// ── Karte laden ───────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("mapArea")) initHomePage();
+  if (document.querySelector(".detail-page")) initDetailPage();
+});
+
+async function initHomePage() {
+  await loadMap();
+}
 
 async function loadMap() {
   const mapArea = document.getElementById("mapArea");
   if (!mapArea) return;
 
   try {
-    const response = await fetch("assets/map.svg");
-    const svg      = await response.text();
+    const response = await fetch("assets/map.svg", { cache: "force-cache" });
+    const svg = await response.text();
+
     mapArea.innerHTML = svg;
+
     initMapHover();
+    makeAllMappedPinsClickable();
   } catch (error) {
     console.error("SVG konnte nicht geladen werden:", error);
+    mapArea.innerHTML = `<p class="loading-text">Karte konnte nicht geladen werden.</p>`;
   }
 }
 
-// ── Karten-Interaktion ────────────────────────────────────────
+function normalizeId(id) {
+  return String(id)
+    .toLowerCase()
+    .trim()
+    .replaceAll("ä", "ae")
+    .replaceAll("ö", "oe")
+    .replaceAll("ü", "ue")
+    .replaceAll("é", "e")
+    .replaceAll("è", "e")
+    .replaceAll("à", "a")
+    .replaceAll(" ", "")
+    .replaceAll("_", "")
+    .replaceAll("-", "");
+}
+
+function getApiIdFromSvgId(svgId) {
+  const cleanSvgId = normalizeId(svgId);
+
+  for (const key in PIN_TO_API) {
+    if (normalizeId(key) === cleanSvgId) {
+      return PIN_TO_API[key];
+    }
+  }
+
+  return null;
+}
+
+function getApiIdFromElement(element) {
+  if (!element) return null;
+
+  let current = element;
+
+  while (current && current !== document) {
+    if (current.id) {
+      const apiId = getApiIdFromSvgId(current.id);
+      if (apiId) return apiId;
+    }
+
+    current = current.parentElement;
+  }
+
+  return null;
+}
+
+function findClickablePinElement(target) {
+  let current = target;
+
+  while (current && current !== document) {
+    if (current.classList && current.classList.contains("clickable-pin")) {
+      return current;
+    }
+
+    current = current.parentElement;
+  }
+
+  return null;
+}
+
+function initMapHover() {
+  mapDistrictItems = Array.from(document.querySelectorAll(".district-list li"));
+  mapDistrictPaths = Array.from(
+    document.querySelectorAll("#districts > path[id^='kreis'], #districts > g[id^='kreis']")
+  );
+
+  mapDistrictItems.forEach(item => {
+    item.addEventListener("mouseenter", () => activateDistrict(item.dataset.district));
+    item.addEventListener("mouseleave", resetMap);
+  });
+
+  mapDistrictPaths.forEach(path => {
+    path.addEventListener("mouseenter", () => activateDistrict(path.id));
+    path.addEventListener("mouseleave", resetMap);
+  });
+}
 
 function resetMap() {
   mapDistrictPaths.forEach(path => {
     path.classList.remove("active");
     path.style.fill = "";
   });
-  mapPinGroups.forEach(g => g.classList.remove("active"));
-  mapDistrictItems.forEach(li => li.classList.remove("active"));
+
+  mapDistrictItems.forEach(item => {
+    item.classList.remove("active");
+  });
 }
 
 function activateDistrict(districtId) {
   resetMap();
 
-  const path  = document.getElementById(districtId);
-  const pins  = document.getElementById(districtId + "_2");
-  const item  = document.querySelector(`.district-list li[data-district="${districtId}"]`);
+  const district = document.getElementById(districtId);
+  const item = document.querySelector(`.district-list li[data-district="${districtId}"]`);
 
-  if (path) { path.classList.add("active"); path.style.fill = "#07DCC0"; }
-  if (pins)   pins.classList.add("active");
-  if (item)   item.classList.add("active");
+  if (district) {
+    district.classList.add("active");
+
+    if (district.tagName.toLowerCase() === "path") {
+      district.style.fill = "#07DCC0";
+    }
+  }
+
+  if (item) item.classList.add("active");
 }
 
-function initMapHover() {
+function makeAllMappedPinsClickable() {
   const svg = document.querySelector("#mapArea svg");
   if (!svg) return;
 
-  mapDistrictItems = Array.from(document.querySelectorAll(".district-list li"));
-  mapDistrictPaths = Array.from(document.querySelectorAll("#districts > path[id^='kreis']"));
-  mapPinGroups     = Array.from(document.querySelectorAll("#pins > g > g"));
+  clickablePins = [];
 
-  // Kreis-Liste
-  mapDistrictItems.forEach(item => {
-    item.addEventListener("mouseenter", () => activateDistrict(item.dataset.district));
-    item.addEventListener("mouseleave", e => {
-      if (!e.relatedTarget || !e.relatedTarget.closest(".district-list")) resetMap();
-    });
-  });
+  const elementsWithId = Array.from(svg.querySelectorAll("[id]"));
 
-  // Karte: Kreis-Flächen
-  mapDistrictPaths.forEach(path => {
-    path.style.cursor = "pointer";
-    path.addEventListener("mouseenter", () => activateDistrict(path.id));
-  });
+  elementsWithId.forEach(element => {
+    const apiId = getApiIdFromSvgId(element.id);
+    if (!apiId) return;
 
-  // Karte: Pin-Symbole
-  mapPinGroups.forEach(pinGroup => {
-    pinGroup.style.cursor = "pointer";
-    pinGroup.querySelectorAll("path").forEach(p => p.setAttribute("pointer-events", "stroke"));
+    element.classList.add("clickable-pin");
+    element.dataset.apiId = apiId;
 
-    pinGroup.addEventListener("mouseenter", () => {
-      const kreisId = pinGroup.parentElement.id.replace("_2", "");
-      activateDistrict(kreisId);
+    element.style.cursor = "pointer";
+    element.style.pointerEvents = "all";
+
+    element.querySelectorAll("*").forEach(child => {
+      child.style.cursor = "pointer";
+      child.style.pointerEvents = "all";
     });
 
-    pinGroup.addEventListener("click", () => {
-      const apiId = PIN_TO_API[pinGroup.id] || pinGroup.id;
-      showDetail(apiId);
-    });
+    try {
+      const box = element.getBBox();
+      const hitArea = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+
+      hitArea.setAttribute("x", box.x - 4);
+      hitArea.setAttribute("y", box.y - 4);
+      hitArea.setAttribute("width", box.width + 8);
+      hitArea.setAttribute("height", box.height + 8);
+      hitArea.setAttribute("fill", "transparent");
+      hitArea.setAttribute("class", "pin-hit-area");
+      hitArea.dataset.apiId = apiId;
+      hitArea.dataset.pinId = element.id;
+
+      hitArea.style.cursor = "pointer";
+      hitArea.style.pointerEvents = "all";
+
+      element.appendChild(hitArea);
+    } catch (error) {
+      console.warn("Hitbox konnte nicht erstellt werden:", element.id);
+    }
+
+    clickablePins.push(element);
   });
 
-  svg.addEventListener("mouseleave", resetMap);
+  svg.addEventListener("click", event => {
+    const hitArea = event.target.closest(".pin-hit-area");
+    const pin = findClickablePinElement(event.target);
+
+    const lotId =
+      hitArea?.dataset.apiId ||
+      pin?.dataset.apiId ||
+      getApiIdFromElement(event.target);
+
+    if (!lotId) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    window.location.href = `parkhaus.html?id=${encodeURIComponent(lotId)}`;
+  });
+
+  svg.addEventListener("mouseover", event => {
+    const hitArea = event.target.closest(".pin-hit-area");
+    const pinId = hitArea?.dataset.pinId;
+    const pin = pinId ? document.getElementById(pinId) : findClickablePinElement(event.target);
+
+    const lotId =
+      hitArea?.dataset.apiId ||
+      pin?.dataset.apiId ||
+      getApiIdFromElement(event.target);
+
+    if (!lotId) return;
+
+    const kreisId = API_TO_KREIS[lotId];
+    if (kreisId) activateDistrict(kreisId);
+
+    if (pin) pin.classList.add("pin-hover");
+
+    const label = document.getElementById("pinLabel");
+    if (label && pin) {
+      label.textContent = getPinName(pin.id);
+      label.classList.add("visible");
+    }
+  });
+
+  svg.addEventListener("mouseout", event => {
+    const hitArea = event.target.closest(".pin-hit-area");
+    const pinId = hitArea?.dataset.pinId;
+    const pin = pinId ? document.getElementById(pinId) : findClickablePinElement(event.target);
+
+    if (pin) {
+      pin.classList.remove("pin-hover");
+      resetMap();
+
+      const label = document.getElementById("pinLabel");
+      if (label) label.classList.remove("visible");
+    }
+  });
 }
 
-// ── Hilfsfunktionen ───────────────────────────────────────────
+function getPinName(svgId) {
+  const cleanSvgId = normalizeId(svgId);
 
-function availClass(free, total) {
-  if (total === 0 || free == null) return "muted";
-  const p = free / total;
-  if (p > 0.3) return "green";
-  if (p > 0.1) return "orange";
-  return "red";
-}
-
-function pinToKreis(apiId) {
-  return API_TO_KREIS[apiId] || null;
-}
-
-// ── Auto-Animation ────────────────────────────────────────────
-
-function animateCar(direction) {
-  if (animating) return;
-  animating = true;
-  const car = document.getElementById("animCar");
-  car.classList.remove("hidden", "entering", "exiting");
-  car.style.transform = direction === "in" ? "scaleX(1)" : "scaleX(-1)";
-  car.classList.add(direction === "in" ? "entering" : "exiting");
-  car.addEventListener("animationend", () => {
-    car.classList.add("hidden");
-    car.classList.remove("entering", "exiting");
-    animating = false;
-  }, { once: true });
-}
-
-// ── Digitale Anzeige ──────────────────────────────────────────
-
-function updateNumber(newVal) {
-  const el   = document.getElementById("digitalNumber");
-  const prev = lastFree;
-
-  el.classList.remove("flash-up", "flash-down");
-  void el.offsetWidth;
-  el.textContent = newVal != null ? newVal : "–";
-
-  if (prev !== null && newVal !== null) {
-    if (newVal > prev) { el.classList.add("flash-up");   animateCar("out"); }
-    else if (newVal < prev) { el.classList.add("flash-down"); animateCar("in");  }
+  for (const key in PIN_NAMES) {
+    if (normalizeId(key) === cleanSvgId) {
+      return PIN_NAMES[key];
+    }
   }
-  lastFree = newVal;
+
+  return "Parkhaus";
 }
 
-// ── Belegungsbalken ───────────────────────────────────────────
+/* Detailseite */
 
-function updateBar(free, total) {
-  const bar = document.getElementById("occBar");
-  const pct = total > 0 ? Math.round(((total - free) / total) * 100) : 0;
-  bar.className = "occ-bar-fill" + (pct > 85 ? " full" : pct > 60 ? " busy" : "");
-  bar.style.width = pct + "%";
-}
+function initDetailPage() {
+  const params = new URLSearchParams(window.location.search);
+  const lotId = params.get("id");
 
-// ── Mini-Karte ────────────────────────────────────────────────
-
-function buildMiniMap(activeKreis) {
-  const districts = [
-    { id: "kreis1",  x: 62, y: 52, w: 12, h: 10 },
-    { id: "kreis2",  x: 58, y: 62, w: 14, h: 14 },
-    { id: "kreis3",  x: 44, y: 56, w: 16, h: 18 },
-    { id: "kreis4",  x: 44, y: 42, w: 16, h: 14 },
-    { id: "kreis5",  x: 36, y: 34, w: 14, h: 18 },
-    { id: "kreis6",  x: 58, y: 34, w: 18, h: 18 },
-    { id: "kreis7",  x: 72, y: 32, w: 22, h: 28 },
-    { id: "kreis8",  x: 72, y: 60, w: 16, h: 16 },
-    { id: "kreis9",  x: 14, y: 38, w: 22, h: 26 },
-    { id: "kreis10", x: 32, y: 20, w: 24, h: 18 },
-    { id: "kreis11", x: 48, y:  6, w: 30, h: 18 },
-    { id: "kreis12", x: 78, y:  8, w: 18, h: 22 },
-  ];
-
-  const rects = districts.map(d => {
-    const active = d.id === activeKreis;
-    const fill   = active ? "#b2f0ea" : "#c8cdd4";
-    const stroke = active ? "#07DCC0" : "#a0a8b4";
-    const sw     = active ? 1.5 : 0.5;
-    return `<rect x="${d.x}" y="${d.y}" width="${d.w}" height="${d.h}"
-      rx="2" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
-  }).join("");
-
-  const river = `<path d="M68 76 Q65 64 66 52 Q67 38 64 24"
-    stroke="#1565C0" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-
-  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-    <rect width="100" height="100" fill="#d4d8de"/>
-    ${rects}
-    ${river}
-  </svg>`;
-}
-
-// ── Detail-Panel ──────────────────────────────────────────────
-
-function renderDetail(lot) {
-  const free  = lot.free_lots  ?? null;
-  const total = lot.total_lots ?? 0;
-
-  document.getElementById("cardName").textContent    = lot.name || lot.id;
-  document.getElementById("cardAddress").textContent = lot.address || "Adresse nicht verfügbar";
-
-  const statusEl = document.getElementById("cardStatus");
-  const s        = lot.state || "unknown";
-  statusEl.textContent = s === "open" ? "Geöffnet" : s === "closed" ? "Geschlossen" : "—";
-  statusEl.className   = "card-status " + (s === "open" ? "open" : s === "closed" ? "closed" : "unknown");
-
-  updateBar(free ?? 0, total);
-  updateNumber(free);
-}
-
-async function fetchAndRender() {
-  let data;
-  try {
-    const res = await fetch(API);
-    data = await res.json();
-  } catch (e) {
-    console.error("API Fehler:", e);
+  if (!lotId) {
+    showDetailError("Kein Parkhaus ausgewählt.");
     return;
   }
-  if (!data || !data.lots) return;
 
-  const lot = data.lots.find(l => l.id === currentLotId);
-  if (!lot) return;
+  const cached = getCachedApiData();
 
-  renderDetail(lot);
+  if (cached) {
+    const lot = cached.lots?.find(item => item.id === lotId);
+    if (lot) renderDetail(lot);
+  }
 
-  const kreisId = pinToKreis(lot.id);
-  document.getElementById("mapThumb").innerHTML = buildMiniMap(kreisId);
+  loadDetail(lotId);
+
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => loadDetail(lotId), REFRESH_MS);
 }
 
-async function showDetail(lotId) {
-  currentLotId = lotId;
-  lastFree     = null;
-  animating    = false;
+async function fetchParkingData() {
+  const cached = getCachedApiData();
 
-  document.getElementById("home-view").style.display    = "none";
-  document.getElementById("detail-panel").style.display = "block";
+  if (cached) {
+    return cached;
+  }
 
-  await fetchAndRender();
+  const response = await fetch(API, { cache: "no-store" });
+  const data = await response.json();
 
-  if (refreshInterval) clearInterval(refreshInterval);
-  refreshInterval = setInterval(fetchAndRender, REFRESH_MS);
+  localStorage.setItem(CACHE_KEY, JSON.stringify({
+    time: Date.now(),
+    data
+  }));
+
+  return data;
 }
 
-function hideDetail() {
-  if (refreshInterval) clearInterval(refreshInterval);
-  refreshInterval = null;
-  currentLotId    = null;
-  lastFree        = null;
-  animating       = false;
+function getCachedApiData() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
 
-  document.getElementById("detail-panel").style.display = "none";
-  document.getElementById("home-view").style.display    = "block";
+    const cached = JSON.parse(raw);
+    const isFresh = Date.now() - cached.time < CACHE_TIME;
 
-  resetMap();
+    return isFresh ? cached.data : null;
+  } catch {
+    return null;
+  }
 }
 
-// ── Start ─────────────────────────────────────────────────────
+async function loadDetail(lotId) {
+  try {
+    const data = await fetchParkingData();
 
-document.addEventListener("DOMContentLoaded", async () => {
-  await loadMap();
-  document.getElementById("back-btn").addEventListener("click", hideDetail);
-});
+    if (!data || !data.lots) {
+      showDetailError("API-Daten konnten nicht gelesen werden.");
+      return;
+    }
+
+    const lot = data.lots.find(item => item.id === lotId);
+
+    if (!lot) {
+      showDetailError("Parkhaus nicht gefunden.");
+      console.warn("Gesuchte ID:", lotId);
+      console.log("Verfügbare Lots:", data.lots);
+      return;
+    }
+
+    renderDetail(lot);
+  } catch (error) {
+    console.error("API Fehler:", error);
+    showDetailError("API konnte nicht geladen werden.");
+  }
+}
+
+function renderDetail(lot) {
+  const name = lot.name || lot.id || "Parkhaus";
+  const address = lot.address || "Adresse nicht verfügbar";
+  const free = getNumber(lot.free, lot.free_lots, lot.Free);
+  const total = getNumber(lot.total, lot.total_lots, lot.Total);
+  const state = lot.state || lot.status || "unknown";
+
+  document.getElementById("detailName").textContent = name;
+  document.getElementById("detailAddress").textContent = address;
+  document.getElementById("detailFree").textContent = free !== null ? free : "–";
+  document.getElementById("detailStatus").textContent = getStatusText(state);
+
+  updateAvailabilityBar(free, total);
+  updateMiniMap(API_TO_KREIS[lot.id]);
+}
+
+function getNumber(...values) {
+  for (const value of values) {
+    if (typeof value === "number") return value;
+
+    if (typeof value === "string" && value.trim() !== "" && !isNaN(value)) {
+      return Number(value);
+    }
+  }
+
+  return null;
+}
+
+function getStatusText(state) {
+  if (state === "open") return "Geöffnet";
+  if (state === "closed") return "Geschlossen";
+  return "Status unbekannt";
+}
+
+function updateAvailabilityBar(free, total) {
+  const fill = document.getElementById("availabilityFill");
+  if (!fill) return;
+
+  if (free === null || total === null || total <= 0) {
+    fill.style.width = "0%";
+    fill.style.background = "#cccccc";
+    return;
+  }
+
+  const occupied = total - free;
+  const percent = Math.max(0, Math.min(100, Math.round((occupied / total) * 100)));
+
+  fill.style.width = percent + "%";
+
+  if (percent >= 90) {
+    fill.style.background = "#FF3131";
+  } else if (percent >= 70) {
+    fill.style.background = "#ff9aa2";
+  } else {
+    fill.style.background = "#07DCC0";
+  }
+}
+
+async function updateMiniMap(activeKreis) {
+  const miniMap = document.getElementById("miniMap");
+  if (!miniMap) return;
+
+  try {
+    const response = await fetch("assets/map.svg", { cache: "force-cache" });
+    const svgText = await response.text();
+
+    miniMap.innerHTML = svgText;
+
+    const svg = miniMap.querySelector("svg");
+    if (!svg) return;
+
+    svg.classList.add("mini-original-map");
+
+    const pins = svg.querySelector("#pins");
+    if (pins) pins.remove();
+
+    svg.querySelectorAll("[id^='kreis']").forEach(kreis => {
+      kreis.classList.remove("active");
+      kreis.style.fill = "#d7d7d7";
+    });
+
+    const active = svg.querySelector(`#${activeKreis}`);
+    if (active) {
+      active.style.fill = "#07DCC0";
+    }
+
+    svg.querySelectorAll("path, polygon, circle, rect").forEach(el => {
+      el.style.pointerEvents = "none";
+    });
+
+  } catch (error) {
+    console.error("Mini-Karte konnte nicht geladen werden:", error);
+  }
+}
+
+function showDetailError(message) {
+  const name = document.getElementById("detailName");
+  const address = document.getElementById("detailAddress");
+  const status = document.getElementById("detailStatus");
+  const free = document.getElementById("detailFree");
+
+  if (name) name.textContent = "Fehler";
+  if (address) address.textContent = message;
+  if (status) status.textContent = "";
+  if (free) free.textContent = "–";
+}

@@ -2,77 +2,43 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wo Parken?</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <main class="home">
-
   <section class="info-box">
+    <h1><span>Wo</span> Parken?</h1>
 
-    <!-- Startansicht: Kreisliste -->
-    <div id="home-view">
-      <h1><span>Wo</span> Parken?</h1>
+    <div class="district-card">
+      <ol class="district-list">
+        <li data-district="kreis1">Altstadt</li>
+        <li data-district="kreis2">Enge, Wollishofen & Leimbach</li>
+        <li data-district="kreis3">Wiedikon</li>
+        <li data-district="kreis4">Aussersihl</li>
+        <li data-district="kreis5">Industriequartier</li>
+        <li data-district="kreis6">Ober- & Unterstrass</li>
+        <li data-district="kreis7">Fluntern, Hottingen,<br>Hirslanden & Witikon</li>
+        <li data-district="kreis8">Riesbach</li>
+        <li data-district="kreis9">Altstetten & Albisrieden</li>
+        <li data-district="kreis10">Höngg & Wipkingen</li>
+        <li data-district="kreis11">Seebach, Affoltern & Oerlikon</li>
+        <li data-district="kreis12">Schwamendingen</li>
+      </ol>
 
-      <div class="district-card">
-        <ol class="district-list">
-          <li data-district="kreis1">Altstadt</li>
-          <li data-district="kreis2">Enge, Wollishofen & Leimbach</li>
-          <li data-district="kreis3">Wiedikon</li>
-          <li data-district="kreis4">Aussersihl</li>
-          <li data-district="kreis5">Industriequiatier</li>
-          <li data-district="kreis6">Ober- & Unterstrass</li>
-          <li data-district="kreis7">Fluntern, Hottingen,<br>Hirslanden & Witikon</li>
-          <li data-district="kreis8">Riesbach</li>
-          <li data-district="kreis9">Altstetten & Albisrieden</li>
-          <li data-district="kreis10">Höngg & Wipkingen</li>
-          <li data-district="kreis11">Seebach, Affoltern Oerlikon</li>
-          <li data-district="kreis12">Schwamendingen</li>
-        </ol>
-
-        <img class="parking-house" src="assets/parkhaus.png" alt="Parkhaus">
-      </div>
+      <img class="parking-house-small" src="assets/parkhaus.png" alt="Parkhaus" loading="eager">
     </div>
-
-    <!-- Detailansicht: erscheint beim Pin-Klick -->
-    <div id="detail-panel" style="display:none">
-      <button id="back-btn" class="ph-back">← Zurück</button>
-
-      <div class="ph-card">
-        <div class="ph-card-top">
-          <div>
-            <h1 id="cardName" class="ph-name"></h1>
-            <p id="cardAddress" class="ph-address"></p>
-          </div>
-          <span id="cardStatus" class="card-status"></span>
-        </div>
-
-        <div class="ph-counter">
-          <div class="ph-counter-label">Freie Plätze</div>
-          <div class="ph-counter-display">
-            <span id="digitalNumber" class="digital-number">–</span>
-          </div>
-          <div id="animCar" class="anim-car hidden">🚗</div>
-        </div>
-
-        <div class="ph-occ-wrap">
-          <div class="ph-occ-label">Belegung</div>
-          <div class="occ-bar-track">
-            <div id="occBar" class="occ-bar-fill"></div>
-          </div>
-        </div>
-
-        <div id="mapThumb" class="ph-map-thumb"></div>
-      </div>
-    </div>
-
   </section>
 
-  <section class="map-area" id="mapArea"></section>
+<section class="map-area" id="mapArea">
+  <p class="loading-text">Karte wird geladen …</p>
+</section>
 
+<div id="pinLabel" class="pin-label"></div>
 </main>
 
-<script src="js/script.js"></script>
+<script src="js/script.js" defer></script>
 </body>
 </html>

@@ -3,7 +3,8 @@
 :root {
   --turquoise: #07DCC0;
   --red: #FF3131;
-  --black: #000000;
+  --black: #2d2d2d;
+  --grey: #e8e8e8;
 }
 
 * {
@@ -17,6 +18,13 @@ body {
   background: radial-gradient(circle at center, #ffffff 42%, #dcdcdc 100%);
 }
 
+.loading-text {
+  font-size: 18px;
+  color: #777;
+}
+
+/* Startseite */
+
 .home {
   min-height: 100vh;
   display: grid;
@@ -27,8 +35,8 @@ body {
 }
 
 .info-box {
-  position: relative;
   width: 500px;
+  position: relative;
 }
 
 .info-box h1 {
@@ -77,7 +85,7 @@ body {
   transform: translateX(5px);
 }
 
-.parking-house {
+.parking-house-small {
   position: absolute;
   left: 42px;
   bottom: -75px;
@@ -101,256 +109,259 @@ body {
   overflow: visible;
 }
 
-#districts path {
+/* SVG */
+
+#districts > path,
+#districts > g {
   transition: fill 0.25s ease;
-}
-
-#districts path.active {
-  fill: var(--turquoise);
-}
-
-#pins g {
   cursor: pointer;
 }
 
-#pins g path {
+#districts > path.active,
+#districts > g.active {
+  fill: var(--turquoise) !important;
+}
+
+.clickable-pin,
+.clickable-pin * {
+  cursor: pointer !important;
+  pointer-events: all !important;
+}
+
+.clickable-pin:hover path,
+.clickable-pin:hover polygon,
+.clickable-pin:hover circle {
+  fill: var(--red) !important;
+}
+
+/* Hitbox bleibt immer unsichtbar */
+.clickable-pin:hover .pin-hit-area,
+.pin-hit-area,
+.pin-hit-area:hover {
+  fill: transparent !important;
+  stroke: none !important;
+}
+
+/* Pins wieder weiss */
+#pins path,
+#pins polygon,
+#pins circle,
+#pins rect {
   transition: fill 0.2s ease;
 }
 
-#pins g.active path,
-#pins g:hover path {
-  fill: var(--red);
-}
+/* Detailseite */
 
-#districts > path.active {
-  fill: #07DCC0 !important;
-}
-
-#pins > g.active path,
-#pins > g:hover path {
-  fill: #FF3131 !important;
-}
-
-#pins > g {
-  pointer-events: all;
-  cursor: pointer;
-}
-
-/* ─────────────────────────────────────────────────
-   Parkhaus-Detailpanel (in info-box)
-   ───────────────────────────────────────────────── */
-
-#detail-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  height: 100%;
-}
-
-.ph-back {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  color: var(--turquoise);
-  font-family: inherit;
-  font-weight: 600;
-  font-size: 15px;
-  text-align: left;
-}
-
-/* ── Detail-Karte ── */
-.ph-card {
-  background: white;
-  border: 16px solid var(--turquoise);
-  border-radius: 28px;
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-.ph-card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.ph-name {
-  font-size: 26px;
-  font-weight: 700;
-  margin: 0;
-  line-height: 1.2;
-}
-
-.ph-address {
-  font-size: 14px;
-  color: #777;
-  margin: 6px 0 0;
-}
-
-/* ── Status-Badge ── */
-.card-status {
-  font-size: 13px;
-  font-weight: 600;
-  padding: 5px 12px;
-  border-radius: 20px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.card-status.open    { background: #d4f4ee; color: #06977e; }
-.card-status.closed  { background: #ffe0e0; color: var(--red); }
-.card-status.unknown { background: #eee;    color: #888; }
-
-/* ── Digitaler Zähler ── */
-.ph-counter {
-  text-align: center;
+.detail-page {
+  min-height: 100vh;
   position: relative;
-  padding-bottom: 20px;
-}
-.ph-counter-label {
-  font-size: 12px;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 10px;
-}
-.ph-counter-display {
-  background: #111;
-  border-radius: 14px;
-  padding: 18px 24px;
-  display: inline-block;
-}
-.digital-number {
-  font-family: 'digitalnumbers', monospace;
-  font-size: 54px;
-  color: var(--turquoise);
-  display: block;
-  min-width: 100px;
-  text-align: center;
-}
-.digital-number.flash-up   { animation: num-flash-up   0.5s ease; }
-.digital-number.flash-down { animation: num-flash-down 0.5s ease; }
-
-@keyframes num-flash-up {
-  0%   { color: #00ff99; }
-  100% { color: var(--turquoise); }
-}
-@keyframes num-flash-down {
-  0%   { color: var(--red); }
-  100% { color: var(--turquoise); }
+  overflow: hidden;
+  padding: 110px 0 0 100px;
 }
 
-/* ── Auto-Animation ── */
-.anim-car {
-  font-size: 28px;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.anim-car.hidden   { display: none; }
-.anim-car.entering { animation: car-enter 0.7s ease-out forwards; }
-.anim-car.exiting  { animation: car-exit  0.7s ease-in  forwards; }
-
-@keyframes car-enter {
-  from { opacity: 0; transform: translateX(calc(-50% + 120px)); }
-  to   { opacity: 1; transform: translateX(-50%); }
-}
-@keyframes car-exit {
-  from { opacity: 1; transform: translateX(-50%); }
-  to   { opacity: 0; transform: translateX(calc(-50% - 120px)); }
+.detail-info-card {
+  width: 410px;
+  min-height: 620px;
+  background: #ffffff;
+  border: 30px solid var(--turquoise);
+  border-radius: 48px;
+  padding: 65px 35px 45px;
+  position: relative;
+  z-index: 3;
 }
 
-/* ── Belegungsbalken ── */
-.ph-occ-label {
-  font-size: 12px;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 8px;
+.detail-info-card h1 {
+  font-size: 36px;
+  margin: 0 0 26px;
+  line-height: 1.1;
 }
-.occ-bar-track {
-  background: #eee;
-  border-radius: 8px;
-  height: 14px;
+
+.availability-bar {
+  width: 100%;
+  height: 22px;
+  background: var(--grey);
+  margin-bottom: 35px;
   overflow: hidden;
 }
-.occ-bar-fill {
-  height: 100%;
-  border-radius: 8px;
-  background: var(--turquoise);
-  width: 0%;
-  transition: width 0.6s ease, background 0.4s ease;
-}
-.occ-bar-fill.busy { background: #f59e0b; }
-.occ-bar-fill.full { background: var(--red); }
 
-/* ── Mini-Karte ── */
-.ph-map-thumb svg {
+#availabilityFill {
+  width: 0%;
+  height: 100%;
+  background: #cccccc;
+  transition: width 0.5s ease, background 0.3s ease;
+}
+
+.detail-address,
+.detail-status {
+  font-size: 23px;
+  margin: 0 0 12px;
+}
+
+.free-label {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 20px 0 8px;
+}
+
+.digital-box {
+  background: #e9e9e9;
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.digital-number {
+  font-family: 'digitalnumbers', monospace;
+  font-size: 110px;
+  line-height: 1;
+  color: var(--black);
+}
+
+.mini-map-link {
+  position: absolute;
+  top: 35px;
+  right: 75px;
+  width: 240px;
+  z-index: 5;
+  display: block;
+  cursor: pointer;
+}
+
+#miniMap svg {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 12px;
 }
 
-/* ── Sidebar: Parkhaus-Liste ── */
-.ph-sidebar-title {
+.parking-house-large {
+  position: absolute;
+  right: -130px;
+  bottom: -10px;
+  width: 1050px;
+  max-width: 75vw;
+  z-index: 1;
+}
+
+@media (max-width: 1100px) {
+  .home {
+    grid-template-columns: 1fr;
+    padding: 35px;
+  }
+
+  .info-box,
+  .district-card {
+    width: 100%;
+  }
+
+  .detail-page {
+    padding: 80px 30px;
+  }
+
+  .detail-info-card {
+    width: 100%;
+    max-width: 410px;
+  }
+
+  .parking-house-large {
+    opacity: 0.25;
+  }
+
+  .mini-map-link {
+    width: 170px;
+    right: 30px;
+  }
+}
+
+.pin-label {
+  position: fixed;
+  right: 38px;
+  bottom: 32px;
+  z-index: 20;
+  background: #ffffff;
+  border: 4px solid var(--turquoise);
+  border-radius: 18px;
+  padding: 14px 20px;
   font-size: 22px;
   font-weight: 700;
-  margin: 0 0 20px;
-}
-
-.lots-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  max-height: calc(100vh - 200px);
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.lots-list li a {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  background: white;
-  border-radius: 12px;
-  text-decoration: none;
   color: var(--black);
-  border: 2px solid transparent;
-  transition: border-color 0.2s, background 0.2s;
-}
-.lots-list li a:hover {
-  background: #f0fdf9;
-  border-color: var(--turquoise);
-}
-.lots-list li.active-lot a {
-  background: #e0faf5;
-  border-color: var(--turquoise);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
-.lot-name {
-  flex: 1;
-  font-weight: 500;
-  font-size: 15px;
+.pin-label.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
-.lot-avail {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 3px 9px;
-  border-radius: 20px;
+
+.pin-hit-area {
+  fill: transparent !important;
+  stroke: none !important;
+  pointer-events: all !important;
+  cursor: pointer !important;
 }
-.lot-avail.green  { background: #d4f4ee; color: #06977e; }
-.lot-avail.orange { background: #fff3cd; color: #b45309; }
-.lot-avail.red    { background: #ffe0e0; color: var(--red); }
-.lot-avail.muted  { background: #eee;    color: #999; }
-.lot-arrow {
-  font-size: 18px;
-  color: #ccc;
+
+/* ─────────────────────────────
+   Mini Originalkarte
+───────────────────────────── */
+
+.mini-original-map {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.mini-original-map #districts > path,
+.mini-original-map #districts > g {
+  transition: none !important;
+}
+
+.mini-map-link svg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ─────────────────────────────
+   Zurück Button
+───────────────────────────── */
+
+.back-button {
+  position: absolute;
+  top: 35px;
+  left: 100px;
+  z-index: 10;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 14px 22px;
+
+  background: #ffffff;
+  border: 4px solid var(--turquoise);
+  border-radius: 18px;
+
+  color: var(--black);
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 700;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
+
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.back-button:hover {
+  background: var(--turquoise);
+  color: #ffffff;
+  transform: translateX(-3px);
 }

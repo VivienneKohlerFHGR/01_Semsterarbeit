@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parkhaus Details</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<main class="detail-page">
+
+  <!-- Zurück Button -->
+  <a href="index.html" class="back-button">
+    ← Zurück zur Karte
+  </a>
+
+  <section class="detail-info-card">
+    <h1 id="detailName">Parkhaus</h1>
+
+    <div class="availability-bar">
+      <div id="availabilityFill"></div>
+    </div>
+
+    <p id="detailAddress" class="detail-address">
+      Daten werden geladen …
+    </p>
+
+    <p id="detailStatus" class="detail-status">
+      Status wird geladen …
+    </p>
+
+    <p class="free-label">
+      Anzahl freie Parkplätze
+    </p>
+
+    <div class="digital-box">
+      <span id="detailFree" class="digital-number">–</span>
+    </div>
+  </section>
+
+  <!-- Mini-Karte -->
+  <a href="index.html" class="mini-map-link" title="Zurück zur Karte">
+    <div id="miniMap"></div>
+  </a>
+
+  <!-- Parkhaus Illustration -->
+  <img
+    class="parking-house-large"
+    src="assets/parkhaus.png"
+    alt="Parkhaus"
+    loading="eager"
+  >
+
+</main>
+
+<script src="js/script.js" defer></script>
+</body>
+</html>
