@@ -400,3 +400,209 @@ body {
   85%  { left: 5%;   opacity: 1; }
   100% { left: -20%; opacity: 0; }
 }
+
+.test-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.test-buttons button {
+  padding: 10px 14px;
+  border: 3px solid var(--turquoise);
+  background: #fff;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  /* ─────────────────────────────
+     STARTSEITE MOBILE
+  ───────────────────────────── */
+
+  .home {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    padding: 18px 16px 25px;
+
+    min-height: auto;
+  }
+
+  .info-box {
+    width: 100%;
+  }
+
+.info-box h1 {
+  font-size: 52px;
+  line-height: 1.3;
+  margin: 0 0 -34px 58px;
+  position: relative;
+  top: -18px;
+}
+
+  .district-card {
+    width: 100%;
+    height: auto;
+    min-height: 520px;
+
+    border-width: 24px;
+    border-radius: 48px;
+
+    padding: 58px 22px 75px;
+  }
+
+  .district-list {
+    font-size: 17px;
+    line-height: 1.32;
+    padding-left: 26px;
+  }
+
+  .parking-house-small {
+    width: 135px;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    bottom: -34px;
+  }
+
+  .map-area {
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  .map-area svg {
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
+  }
+
+  .pin-label {
+    right: 14px;
+    bottom: 14px;
+
+    font-size: 15px;
+
+    padding: 10px 14px;
+
+    border-width: 3px;
+  }
+
+
+  /* ─────────────────────────────
+     DETAILSEITE MOBILE
+  ───────────────────────────── */
+
+  .detail-page {
+    padding: 95px 16px 0;
+
+    min-height: 100vh;
+
+    overflow: hidden;
+  }
+
+  .back-button {
+    top: 20px;
+    left: 16px;
+
+    font-size: 16px;
+
+    padding: 10px 16px;
+
+    border-width: 3px;
+    border-radius: 15px;
+  }
+
+  .mini-map-link {
+    top: 12px;
+    right: 16px;
+
+    width: 82px;
+  }
+
+  .detail-info-card {
+    width: 100%;
+    max-width: 380px;
+
+    min-height: auto;
+
+    border-width: 20px;
+    border-radius: 42px;
+
+    padding: 34px 18px 24px;
+
+    margin: 0 auto;
+  }
+
+  .detail-info-card h1 {
+    font-size: 28px;
+    margin-bottom: 18px;
+  }
+
+  .availability-bar {
+    height: 16px;
+    margin-bottom: 24px;
+  }
+
+  .detail-address,
+  .detail-status {
+    font-size: 18px;
+    line-height: 1.3;
+
+    margin-bottom: 10px;
+  }
+
+  .free-label {
+    font-size: 18px;
+
+    margin-top: 14px;
+    margin-bottom: 8px;
+  }
+
+  .digital-box {
+    height: 125px;
+  }
+
+  .digital-number {
+    font-size: 82px;
+  }
+
+  .test-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 18px;
+    margin-bottom: 0;
+  }
+
+  .test-buttons button {
+    font-size: 13px;
+    padding: 9px 12px;
+    border-width: 3px;
+    border-radius: 14px;
+  }
+
+  .parking-house-large {
+    position: absolute;
+    width: 82%;
+    max-width: none;
+    right: -22%;
+    bottom: 0;
+    margin: 0;
+    transform: none;
+    opacity: 1;
+  }
+
+  .anim-car {
+    height: 52px;
+    bottom: 5px;
+  }
+}

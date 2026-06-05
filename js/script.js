@@ -491,8 +491,8 @@ function renderDetail(lot) {
   document.getElementById("detailStatus").textContent = getStatusText(state);
 
   if (lastFreeLots !== null && free !== null) {
-    if (free < lastFreeLots) playCarAnimation("exit");
-    else if (free > lastFreeLots) playCarAnimation("enter");
+    if (free < lastFreeLots) playCarAnimation("enter");
+    else if (free > lastFreeLots) playCarAnimation("exit");
   }
   lastFreeLots = free;
 
